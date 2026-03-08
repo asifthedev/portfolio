@@ -20,7 +20,189 @@
 }
 
 body {
-  background: var(--background);
+  /* background: radial-gradient(circle at center, #3b0000 0%, #000000 70%); */
+  /* background: var(--background); */
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes heroFadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-hero-fade-up {
+  opacity: 0;
+  animation: heroFadeUp 0.7s ease-out forwards;
+}
+
+.hero-delay-1 {
+  animation-delay: 0.08s;
+}
+
+.hero-delay-2 {
+  animation-delay: 0.16s;
+}
+
+.hero-delay-3 {
+  animation-delay: 0.24s;
+}
+
+.hero-delay-4 {
+  animation-delay: 0.32s;
+}
+
+.hero-delay-5 {
+  animation-delay: 0.4s;
+}
+
+.hero-delay-6 {
+  animation-delay: 0.48s;
+}
+
+/* ── Scroll‑reveal animations ──────────────────────────────── */
+
+@keyframes revealUp {
+  from {
+    opacity: 0;
+    transform: translateY(32px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes revealLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes revealRight {
+  from {
+    opacity: 0;
+    transform: translateX(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Base hidden state for all animated elements */
+[data-animate] {
+  opacity: 0;
+}
+
+/* Triggered by IntersectionObserver */
+[data-animate="fade-up"].in-view {
+  animation: revealUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+[data-animate="fade-left"].in-view {
+  animation: revealLeft 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+[data-animate="fade-right"].in-view {
+  animation: revealRight 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+[data-animate="scale-in"].in-view {
+  animation: scaleIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Stagger delays for child elements */
+[data-delay="1"] {
+  animation-delay: 0.1s !important;
+}
+[data-delay="2"] {
+  animation-delay: 0.2s !important;
+}
+[data-delay="3"] {
+  animation-delay: 0.3s !important;
+}
+[data-delay="4"] {
+  animation-delay: 0.4s !important;
+}
+[data-delay="5"] {
+  animation-delay: 0.5s !important;
+}
+[data-delay="6"] {
+  animation-delay: 0.6s !important;
+}
+[data-delay="7"] {
+  animation-delay: 0.7s !important;
+}
+[data-delay="8"] {
+  animation-delay: 0.8s !important;
+}
+
+/* ── Vertical auto-scroll marquee ──────────────────────────── */
+
+@keyframes scrollUp {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-50%);
+  }
+}
+
+@keyframes scrollDown {
+  0% {
+    transform: translateY(-50%);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+.animate-scroll-up {
+  animation: scrollUp 20s linear infinite;
+}
+
+.animate-scroll-down {
+  animation: scrollDown 20s linear infinite;
+}
+
+.animate-scroll-up:hover,
+.animate-scroll-down:hover {
+  animation-play-state: paused;
 }

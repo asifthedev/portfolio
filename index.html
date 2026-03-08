@@ -1,0 +1,1666 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dania Trading — Competitor Research AI</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=DM+Sans:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --gold: #c9a84c;
+        --dark: #0a0a0a;
+        --surface: #111111;
+        --card: #181818;
+        --card2: #1e1e1e;
+        --border: #272727;
+        --text: #e8e4dc;
+        --muted: #6b6763;
+        --accent: #e8c96a;
+        --green: #4caf50;
+        --red: #e05252;
+        --blue: #5b8fd4;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "DM Sans", sans-serif;
+        background: var(--dark);
+        color: var(--text);
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* HEADER */
+      header {
+        padding: 16px 28px;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        background: var(--surface);
+        position: sticky;
+        top: 0;
+        z-index: 100;
+      }
+
+      .logo-badge {
+        width: 40px;
+        height: 40px;
+        background: linear-gradient(135deg, var(--gold), #7a5a10);
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: "Playfair Display", serif;
+        font-size: 18px;
+        color: #fff;
+        font-weight: 800;
+        flex-shrink: 0;
+      }
+
+      .header-text h1 {
+        font-family: "Playfair Display", serif;
+        font-size: 16px;
+        color: var(--gold);
+      }
+
+      .header-text p {
+        font-size: 11px;
+        color: var(--muted);
+        margin-top: 1px;
+      }
+
+      .tabs {
+        margin-left: auto;
+        display: flex;
+        gap: 4px;
+      }
+
+      .tab-btn {
+        padding: 6px 14px;
+        border-radius: 8px;
+        font-size: 12px;
+        font-weight: 500;
+        cursor: pointer;
+        border: 1px solid var(--border);
+        background: transparent;
+        color: var(--muted);
+        transition: all 0.2s;
+        font-family: "DM Sans", sans-serif;
+      }
+
+      .tab-btn.active {
+        background: rgba(201, 168, 76, 0.12);
+        border-color: var(--gold);
+        color: var(--gold);
+      }
+
+      /* LAYOUT */
+      .layout {
+        display: flex;
+        flex: 1;
+        overflow: hidden;
+        height: calc(100vh - 73px);
+      }
+
+      /* SIDEBAR */
+      .sidebar {
+        width: 300px;
+        flex-shrink: 0;
+        border-right: 1px solid var(--border);
+        overflow-y: auto;
+        background: var(--surface);
+      }
+
+      .sidebar::-webkit-scrollbar {
+        width: 3px;
+      }
+      .sidebar::-webkit-scrollbar-thumb {
+        background: var(--border);
+        border-radius: 3px;
+      }
+
+      .sidebar-header {
+        padding: 14px 16px 10px;
+        font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: var(--muted);
+        border-bottom: 1px solid var(--border);
+      }
+
+      .comp-card {
+        padding: 12px 16px;
+        border-bottom: 1px solid var(--border);
+        cursor: pointer;
+        transition: background 0.15s;
+      }
+
+      .comp-card:hover {
+        background: var(--card);
+      }
+      .comp-card.active {
+        background: rgba(201, 168, 76, 0.08);
+        border-left: 2px solid var(--gold);
+      }
+
+      .comp-name {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--text);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .threat-badge {
+        font-size: 10px;
+        padding: 2px 7px;
+        border-radius: 4px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .threat-high {
+        background: rgba(224, 82, 82, 0.15);
+        color: var(--red);
+      }
+      .threat-med {
+        background: rgba(201, 168, 76, 0.15);
+        color: var(--gold);
+      }
+      .threat-low {
+        background: rgba(76, 175, 80, 0.12);
+        color: var(--green);
+      }
+
+      .comp-loc {
+        font-size: 11px;
+        color: var(--muted);
+        margin-top: 3px;
+      }
+      .comp-tags {
+        display: flex;
+        gap: 4px;
+        margin-top: 6px;
+        flex-wrap: wrap;
+      }
+
+      .tag {
+        font-size: 10px;
+        padding: 2px 6px;
+        background: var(--card2);
+        border: 1px solid var(--border);
+        border-radius: 4px;
+        color: var(--muted);
+      }
+
+      /* MAIN PANEL */
+      .main-panel {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
+
+      /* VIEWS */
+      .view {
+        display: none;
+        flex: 1;
+        flex-direction: column;
+        overflow: hidden;
+      }
+      .view.active {
+        display: flex;
+      }
+
+      /* COMPETITOR DETAIL VIEW */
+      .detail-area {
+        flex: 1;
+        overflow-y: auto;
+        padding: 24px 28px;
+      }
+
+      .detail-area::-webkit-scrollbar {
+        width: 4px;
+      }
+      .detail-area::-webkit-scrollbar-thumb {
+        background: var(--border);
+      }
+
+      .detail-hero {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 20px 24px;
+        margin-bottom: 20px;
+      }
+
+      .detail-hero-top {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        margin-bottom: 12px;
+      }
+
+      .detail-name {
+        font-family: "Playfair Display", serif;
+        font-size: 22px;
+        color: var(--accent);
+      }
+
+      .detail-sub {
+        font-size: 12px;
+        color: var(--muted);
+        margin-top: 4px;
+      }
+
+      .visit-btn {
+        background: rgba(201, 168, 76, 0.12);
+        border: 1px solid var(--gold);
+        color: var(--gold);
+        padding: 8px 16px;
+        border-radius: 8px;
+        font-size: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        transition: all 0.2s;
+        font-family: "DM Sans", sans-serif;
+        flex-shrink: 0;
+      }
+
+      .visit-btn:hover {
+        background: rgba(201, 168, 76, 0.2);
+      }
+
+      .detail-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 12px;
+        margin-bottom: 20px;
+      }
+
+      .detail-stat {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 14px 16px;
+      }
+
+      .detail-stat-label {
+        font-size: 10px;
+        color: var(--muted);
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+      }
+      .detail-stat-val {
+        font-size: 18px;
+        font-weight: 700;
+        color: var(--text);
+        margin-top: 4px;
+      }
+      .detail-stat-val.gold {
+        color: var(--gold);
+      }
+      .detail-stat-val.red {
+        color: var(--red);
+      }
+      .detail-stat-val.green {
+        color: var(--green);
+      }
+
+      .section-title {
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: var(--muted);
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .section-title::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: var(--border);
+      }
+
+      .pros-cons {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+        margin-bottom: 20px;
+      }
+
+      .pros,
+      .cons {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 14px 16px;
+      }
+
+      .pros {
+        border-top: 2px solid var(--green);
+      }
+      .cons {
+        border-top: 2px solid var(--red);
+      }
+
+      .pros-title {
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--green);
+        margin-bottom: 10px;
+      }
+      .cons-title {
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--red);
+        margin-bottom: 10px;
+      }
+
+      .pros li,
+      .cons li {
+        font-size: 12px;
+        color: var(--text);
+        margin-bottom: 6px;
+        list-style: none;
+        padding-left: 14px;
+        position: relative;
+        line-height: 1.5;
+      }
+
+      .pros li::before {
+        content: "✓";
+        position: absolute;
+        left: 0;
+        color: var(--green);
+        font-weight: 700;
+      }
+      .cons li::before {
+        content: "✗";
+        position: absolute;
+        left: 0;
+        color: var(--red);
+        font-weight: 700;
+      }
+
+      .opp-box {
+        background: rgba(201, 168, 76, 0.06);
+        border: 1px solid rgba(201, 168, 76, 0.2);
+        border-radius: 10px;
+        padding: 14px 16px;
+        margin-bottom: 20px;
+      }
+
+      .opp-box p {
+        font-size: 13px;
+        line-height: 1.7;
+        color: var(--text);
+      }
+      .opp-box strong {
+        color: var(--gold);
+      }
+
+      /* CHAT VIEW */
+      .chat-view {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+      }
+
+      .quick-actions {
+        padding: 14px 20px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 7px;
+        border-bottom: 1px solid var(--border);
+        background: var(--surface);
+      }
+
+      .quick-btn {
+        background: var(--card);
+        border: 1px solid var(--border);
+        color: var(--text);
+        padding: 7px 12px;
+        border-radius: 16px;
+        font-size: 11.5px;
+        cursor: pointer;
+        transition: all 0.2s;
+        font-family: "DM Sans", sans-serif;
+      }
+
+      .quick-btn:hover {
+        border-color: var(--gold);
+        color: var(--gold);
+        background: rgba(201, 168, 76, 0.07);
+      }
+
+      .chat-area {
+        flex: 1;
+        overflow-y: auto;
+        padding: 16px 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+
+      .chat-area::-webkit-scrollbar {
+        width: 3px;
+      }
+      .chat-area::-webkit-scrollbar-thumb {
+        background: var(--border);
+        border-radius: 3px;
+      }
+
+      .message {
+        display: flex;
+        gap: 10px;
+        animation: fadeUp 0.3s ease;
+      }
+      .message.user {
+        flex-direction: row-reverse;
+      }
+
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(6px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .avatar {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        font-weight: 600;
+      }
+
+      .avatar.ai {
+        background: linear-gradient(135deg, var(--gold), #7a5a10);
+        color: #fff;
+      }
+      .avatar.user {
+        background: var(--card2);
+        border: 1px solid var(--border);
+        color: var(--gold);
+      }
+
+      .bubble {
+        max-width: 80%;
+        padding: 12px 16px;
+        border-radius: 14px;
+        font-size: 13px;
+        line-height: 1.7;
+      }
+
+      .message.ai .bubble {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-top-left-radius: 4px;
+      }
+
+      .message.user .bubble {
+        background: rgba(201, 168, 76, 0.1);
+        border: 1px solid rgba(201, 168, 76, 0.2);
+        border-top-right-radius: 4px;
+        color: var(--accent);
+      }
+
+      .bubble strong {
+        color: var(--gold);
+      }
+      .bubble ul {
+        padding-left: 16px;
+        margin-top: 6px;
+      }
+      .bubble li {
+        margin-bottom: 5px;
+      }
+
+      .typing {
+        display: flex;
+        gap: 4px;
+        align-items: center;
+        padding: 12px 16px;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        border-top-left-radius: 4px;
+        width: fit-content;
+      }
+
+      .typing span {
+        width: 5px;
+        height: 5px;
+        background: var(--gold);
+        border-radius: 50%;
+        animation: bounce 1.2s infinite;
+        opacity: 0.5;
+      }
+
+      .typing span:nth-child(2) {
+        animation-delay: 0.2s;
+      }
+      .typing span:nth-child(3) {
+        animation-delay: 0.4s;
+      }
+
+      @keyframes bounce {
+        0%,
+        100% {
+          transform: translateY(0);
+          opacity: 0.5;
+        }
+        50% {
+          transform: translateY(-4px);
+          opacity: 1;
+        }
+      }
+
+      .input-area {
+        padding: 12px 20px 16px;
+        border-top: 1px solid var(--border);
+        background: var(--surface);
+      }
+
+      .input-row {
+        display: flex;
+        gap: 8px;
+        align-items: flex-end;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 9px 12px;
+        transition: border-color 0.2s;
+      }
+
+      .input-row:focus-within {
+        border-color: var(--gold);
+      }
+
+      textarea {
+        flex: 1;
+        background: transparent;
+        border: none;
+        outline: none;
+        color: var(--text);
+        font-family: "DM Sans", sans-serif;
+        font-size: 13px;
+        resize: none;
+        min-height: 22px;
+        max-height: 100px;
+        line-height: 1.5;
+      }
+
+      textarea::placeholder {
+        color: var(--muted);
+      }
+
+      .send-btn {
+        width: 34px;
+        height: 34px;
+        background: linear-gradient(135deg, var(--gold), #7a5a10);
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        transition: opacity 0.2s;
+      }
+
+      .send-btn:hover {
+        opacity: 0.85;
+      }
+      .send-btn:disabled {
+        opacity: 0.35;
+        cursor: not-allowed;
+      }
+      .send-btn svg {
+        width: 15px;
+        height: 15px;
+        fill: #fff;
+      }
+
+      /* COMPARE TABLE */
+      .compare-view {
+        flex: 1;
+        overflow: auto;
+        padding: 20px;
+      }
+
+      .compare-view::-webkit-scrollbar {
+        width: 4px;
+        height: 4px;
+      }
+      .compare-view::-webkit-scrollbar-thumb {
+        background: var(--border);
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 12px;
+        min-width: 900px;
+      }
+
+      th {
+        background: var(--card);
+        padding: 12px 14px;
+        text-align: left;
+        border: 1px solid var(--border);
+        color: var(--gold);
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+        font-weight: 600;
+        position: sticky;
+        top: 0;
+      }
+
+      th:first-child {
+        color: var(--muted);
+      }
+
+      td {
+        padding: 11px 14px;
+        border: 1px solid var(--border);
+        vertical-align: top;
+        line-height: 1.5;
+        color: var(--text);
+      }
+
+      tr:hover td {
+        background: rgba(255, 255, 255, 0.02);
+      }
+
+      td:first-child {
+        color: var(--muted);
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-weight: 600;
+      }
+
+      .dania-col {
+        background: rgba(201, 168, 76, 0.05);
+      }
+
+      .yes {
+        color: var(--green);
+        font-weight: 600;
+      }
+      .no {
+        color: var(--red);
+      }
+      .partial {
+        color: var(--gold);
+      }
+
+      .empty-state {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        gap: 12px;
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      .empty-icon {
+        font-size: 36px;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="logo-badge">D</div>
+      <div class="header-text">
+        <h1>Dania Trading — Competitor Intelligence</h1>
+        <p>6 Direct Competitors • East Africa & Horn of Africa Market</p>
+      </div>
+      <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('competitors')">
+          🔍 Competitors
+        </button>
+        <button class="tab-btn" onclick="switchTab('compare')">
+          📊 Compare
+        </button>
+        <button class="tab-btn" onclick="switchTab('chat')">
+          💬 AI Research
+        </button>
+      </div>
+    </header>
+
+    <div class="layout">
+      <!-- SIDEBAR -->
+      <div class="sidebar">
+        <div class="sidebar-header">Competitors Found (6)</div>
+
+        <div class="comp-card active" onclick="showCompetitor(0, this)">
+          <div class="comp-name">
+            Alikhwa Group
+            <span class="threat-badge threat-high">High Threat</span>
+          </div>
+          <div class="comp-loc">📍 Hargeisa, Somaliland • Est. 1993</div>
+          <div class="comp-tags">
+            <span class="tag">Foodstuff</span>
+            <span class="tag">Steel</span>
+            <span class="tag">Logistics</span>
+            <span class="tag">5 Countries</span>
+          </div>
+        </div>
+
+        <div class="comp-card" onclick="showCompetitor(1, this)">
+          <div class="comp-name">
+            AFC General Trading
+            <span class="threat-badge threat-high">High Threat</span>
+          </div>
+          <div class="comp-loc">📍 Djibouti • Est. 2014</div>
+          <div class="comp-tags">
+            <span class="tag">Food Commodities</span>
+            <span class="tag">Sugar</span>
+            <span class="tag">Rice</span>
+            <span class="tag">Cooking Oil</span>
+          </div>
+        </div>
+
+        <div class="comp-card" onclick="showCompetitor(2, this)">
+          <div class="comp-name">
+            MAM General Trading FZE
+            <span class="threat-badge threat-high">High Threat</span>
+          </div>
+          <div class="comp-loc">📍 Djibouti + Addis Ababa • Est. 2021</div>
+          <div class="comp-tags">
+            <span class="tag">Agro Commodities</span>
+            <span class="tag">Vehicles</span>
+            <span class="tag">Logistics</span>
+            <span class="tag">60+ Staff</span>
+          </div>
+        </div>
+
+        <div class="comp-card" onclick="showCompetitor(3, this)">
+          <div class="comp-name">
+            OSMA Trading
+            <span class="threat-badge threat-med">Medium</span>
+          </div>
+          <div class="comp-loc">📍 Djibouti, Ethiopia, Somalia • Est. 2017</div>
+          <div class="comp-tags">
+            <span class="tag">Food</span>
+            <span class="tag">Construction</span>
+            <span class="tag">Spare Parts</span>
+            <span class="tag">Chemicals</span>
+          </div>
+        </div>
+
+        <div class="comp-card" onclick="showCompetitor(4, this)">
+          <div class="comp-name">
+            IJA General Trading FZE
+            <span class="threat-badge threat-med">Medium</span>
+          </div>
+          <div class="comp-loc">📍 Djibouti • Active</div>
+          <div class="comp-tags">
+            <span class="tag">Rice</span>
+            <span class="tag">Coffee</span>
+            <span class="tag">Construction</span>
+            <span class="tag">Soap/Detergent</span>
+          </div>
+        </div>
+
+        <div class="comp-card" onclick="showCompetitor(5, this)">
+          <div class="comp-name">
+            Towfiq Group
+            <span class="threat-badge threat-med">Medium</span>
+          </div>
+          <div class="comp-loc">📍 Bosaso, Somalia + Djibouti • Est. 1992</div>
+          <div class="comp-tags">
+            <span class="tag">Foodstuff</span>
+            <span class="tag">Building Materials</span>
+            <span class="tag">Electronics</span>
+            <span class="tag">Dairy</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- MAIN PANEL -->
+      <div class="main-panel">
+        <!-- COMPETITOR DETAIL VIEW -->
+        <div class="view active" id="view-competitors">
+          <div class="detail-area" id="detailArea">
+            <!-- filled by JS -->
+          </div>
+        </div>
+
+        <!-- COMPARE VIEW -->
+        <div class="view" id="view-compare">
+          <div class="compare-view">
+            <table>
+              <thead>
+                <tr>
+                  <th>Feature / Metric</th>
+                  <th class="dania-col">🏆 Dania Trading</th>
+                  <th>Alikhwa Group</th>
+                  <th>AFC General</th>
+                  <th>MAM General</th>
+                  <th>OSMA Trading</th>
+                  <th>IJA Trading</th>
+                  <th>Towfiq Group</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Founded / Age</td>
+                  <td class="dania-col">15+ years</td>
+                  <td>1993 (32 yrs)</td>
+                  <td>2014 (10 yrs)</td>
+                  <td>2021 (3 yrs)</td>
+                  <td>2017 (7 yrs)</td>
+                  <td>Active</td>
+                  <td>1992 (33 yrs)</td>
+                </tr>
+                <tr>
+                  <td>Headquarters</td>
+                  <td class="dania-col">Djibouti</td>
+                  <td>Hargeisa, Somaliland</td>
+                  <td>Djibouti</td>
+                  <td>Djibouti</td>
+                  <td>Djibouti</td>
+                  <td>Djibouti</td>
+                  <td>Bosaso, Somalia</td>
+                </tr>
+                <tr>
+                  <td>Countries Covered</td>
+                  <td class="dania-col">3 (DJ, SL, ETH)</td>
+                  <td>5 Countries</td>
+                  <td>3 Countries</td>
+                  <td>2 (DJ + ETH)</td>
+                  <td>3 Countries</td>
+                  <td>International</td>
+                  <td>6+ Countries</td>
+                </tr>
+                <tr>
+                  <td>Website</td>
+                  <td class="dania-col">
+                    <a
+                      href="https://www.daniatrading.com"
+                      target="_blank"
+                      style="color: var(--gold)"
+                      >daniatrading.com</a
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://www.alikhwagroups.com"
+                      target="_blank"
+                      style="color: var(--gold)"
+                      >alikhwagroups.com</a
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://afc-africa.com"
+                      target="_blank"
+                      style="color: var(--gold)"
+                      >afc-africa.com</a
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://mamgeneral.com"
+                      target="_blank"
+                      style="color: var(--gold)"
+                      >mamgeneral.com</a
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://osmatrading.com"
+                      target="_blank"
+                      style="color: var(--gold)"
+                      >osmatrading.com</a
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://ijatrading.com"
+                      target="_blank"
+                      style="color: var(--gold)"
+                      >ijatrading.com</a
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://www.towfiiqgroup.com"
+                      target="_blank"
+                      style="color: var(--gold)"
+                      >towfiiqgroup.com</a
+                    >
+                  </td>
+                </tr>
+                <tr>
+                  <td>Foodstuff</td>
+                  <td class="dania-col"><span class="yes">✓ Yes</span></td>
+                  <td><span class="yes">✓ Yes</span></td>
+                  <td><span class="yes">✓ Yes</span></td>
+                  <td><span class="yes">✓ Yes</span></td>
+                  <td><span class="yes">✓ Yes</span></td>
+                  <td><span class="yes">✓ Yes</span></td>
+                  <td><span class="yes">✓ Yes</span></td>
+                </tr>
+                <tr>
+                  <td>Auto Parts</td>
+                  <td class="dania-col">
+                    <span class="yes">✓ Own Brand (Rack Gold)</span>
+                  </td>
+                  <td><span class="no">✗ No</span></td>
+                  <td><span class="no">✗ No</span></td>
+                  <td><span class="yes">✓ Vehicles</span></td>
+                  <td><span class="yes">✓ Spare Parts</span></td>
+                  <td><span class="no">✗ No</span></td>
+                  <td><span class="no">✗ No</span></td>
+                </tr>
+                <tr>
+                  <td>Construction Materials</td>
+                  <td class="dania-col"><span class="yes">✓ Yes</span></td>
+                  <td><span class="yes">✓ Steel Products</span></td>
+                  <td><span class="no">✗ No</span></td>
+                  <td><span class="no">✗ No</span></td>
+                  <td><span class="yes">✓ Yes</span></td>
+                  <td><span class="yes">✓ Yes</span></td>
+                  <td><span class="yes">✓ Yes</span></td>
+                </tr>
+                <tr>
+                  <td>Logistics / Warehousing</td>
+                  <td class="dania-col">
+                    <span class="yes">✓ Sister Company</span>
+                  </td>
+                  <td><span class="yes">✓ 5 Ports</span></td>
+                  <td><span class="partial">~ Partnerships</span></td>
+                  <td><span class="yes">✓ Own Logistics</span></td>
+                  <td><span class="partial">~ Yes</span></td>
+                  <td><span class="partial">~ Yes</span></td>
+                  <td><span class="yes">✓ Yes</span></td>
+                </tr>
+                <tr>
+                  <td>Own Brand</td>
+                  <td class="dania-col">
+                    <span class="yes">✓ Rack Gold</span>
+                  </td>
+                  <td><span class="no">✗ No</span></td>
+                  <td><span class="no">✗ No</span></td>
+                  <td><span class="no">✗ No</span></td>
+                  <td><span class="no">✗ No</span></td>
+                  <td><span class="no">✗ No</span></td>
+                  <td><span class="partial">~ Macaroni</span></td>
+                </tr>
+                <tr>
+                  <td>Team Size</td>
+                  <td class="dania-col">Not stated</td>
+                  <td>Large (5 countries)</td>
+                  <td>Not stated</td>
+                  <td>60+ staff</td>
+                  <td>Not stated</td>
+                  <td>Not stated</td>
+                  <td>Large group</td>
+                </tr>
+                <tr>
+                  <td>Client Testimonials</td>
+                  <td class="dania-col"><span class="no">✗ None</span></td>
+                  <td><span class="partial">~ Mentioned</span></td>
+                  <td><span class="yes">✓ Revenue data shown</span></td>
+                  <td><span class="yes">✓ Yes</span></td>
+                  <td><span class="no">✗ No</span></td>
+                  <td><span class="yes">✓ Yes</span></td>
+                  <td><span class="no">✗ No</span></td>
+                </tr>
+                <tr>
+                  <td>Revenue / Stats</td>
+                  <td class="dania-col">
+                    <span class="no">✗ None shown</span>
+                  </td>
+                  <td><span class="no">✗ No</span></td>
+                  <td><span class="yes">✓ $41.8M (2023)</span></td>
+                  <td><span class="no">✗ No</span></td>
+                  <td><span class="no">✗ No</span></td>
+                  <td><span class="no">✗ No</span></td>
+                  <td><span class="no">✗ No</span></td>
+                </tr>
+                <tr>
+                  <td>Arabic / French Website</td>
+                  <td class="dania-col">
+                    <span class="no">✗ English Only</span>
+                  </td>
+                  <td><span class="partial">~ English Only</span></td>
+                  <td><span class="partial">~ English Only</span></td>
+                  <td><span class="partial">~ English Only</span></td>
+                  <td><span class="partial">~ English Only</span></td>
+                  <td><span class="partial">~ English Only</span></td>
+                  <td><span class="yes">✓ Somali + English</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- CHAT VIEW -->
+        <div class="view" id="view-chat">
+          <div class="quick-actions">
+            <button
+              class="quick-btn"
+              onclick="
+                askQ(
+                  'Dania Trading ka sabse bada competitor kaun hai aur kyun?',
+                )
+              "
+            >
+              🥊 Sabse Bara Competitor?
+            </button>
+            <button
+              class="quick-btn"
+              onclick="
+                askQ(
+                  'Dania Trading ki kya unique advantages hain competitors ke muqable mein?',
+                )
+              "
+            >
+              ⭐ Dania ki Strengths vs Competitors
+            </button>
+            <button
+              class="quick-btn"
+              onclick="
+                askQ(
+                  'AFC General Trading se Dania Trading kaise compete kar sakti hai?',
+                )
+              "
+            >
+              ⚔️ AFC vs Dania Strategy
+            </button>
+            <button
+              class="quick-btn"
+              onclick="
+                askQ(
+                  'Competitors ki website se Dania website ki kya kamzoriyaan hain?',
+                )
+              "
+            >
+              🌐 Website Comparison
+            </button>
+            <button
+              class="quick-btn"
+              onclick="
+                askQ(
+                  'Market mein kya gaps hain jo Dania Trading bhara sakti hai?',
+                )
+              "
+            >
+              💡 Market Gaps
+            </button>
+            <button
+              class="quick-btn"
+              onclick="
+                askQ(
+                  'Next 3 saal ke liye Dania Trading ki growth strategy kya honi chahiye?',
+                )
+              "
+            >
+              📈 Growth Strategy
+            </button>
+          </div>
+
+          <div class="chat-area" id="chatArea">
+            <div class="message ai">
+              <div class="avatar ai">D</div>
+              <div class="bubble">
+                <strong>6 competitors mil gaye hain!</strong> Main ne yeh sab
+                websites analyze ki hain:<br /><br />
+                🔴 <strong>High Threat:</strong> Alikhwa Group, AFC General, MAM
+                General<br />
+                🟡 <strong>Medium:</strong> OSMA Trading, IJA Trading, Towfiq
+                Group<br /><br />
+                Left sidebar mein har competitor ka detail dekh sakte hain, ya
+                "Compare" tab mein side-by-side comparison karein.<br /><br />
+                Yahan mujhse koi bhi sawal poochein — Urdu ya English mein! 👇
+              </div>
+            </div>
+          </div>
+
+          <div class="input-area">
+            <div class="input-row">
+              <textarea
+                id="userInput"
+                placeholder="Competitor ke baare mein kuch poochein..."
+                rows="1"
+                onkeydown="handleKey(event)"
+                oninput="autoResize(this)"
+              ></textarea>
+              <button class="send-btn" id="sendBtn" onclick="sendMessage()">
+                <svg viewBox="0 0 24 24">
+                  <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const COMPETITORS = [
+        {
+          name: "Alikhwa Group",
+          website: "https://www.alikhwagroups.com",
+          location:
+            "Hargeisa, Somaliland (with offices in Djibouti, Ethiopia, Kenya, Somalia)",
+          founded: "1993",
+          staff: "Large regional team",
+          threat: "HIGH",
+          overview:
+            "One of East Africa's most established conglomerates. Direct competitor in ALL of Dania's core markets. Strong brand recognition built over 30+ years. Uses 5 strategic ports including Djibouti, Berbera, and Mombasa.",
+          products: [
+            "Rice, Sugar, Flour, Cooking Oil, Bottled Water",
+            "Steel Sheets & Rebar",
+            "Infrastructure Projects (Roads, Housing)",
+            "NGO & Government Supply Contracts",
+          ],
+          pros: [
+            "30+ years of brand trust in exact same markets",
+            "Operations in 5 countries — much wider reach",
+            "Serves government & NGO contracts (high-value)",
+            "Multi-port strategy (Berbera, Djibouti, Mombasa)",
+            "Strong website with professional content",
+            "Listed as 'leading East African conglomerate'",
+          ],
+          cons: [
+            "Primarily construction & food — no auto parts",
+            "Somaliland-focused, less strong in Djibouti city",
+            "No own brand like Dania's 'Rack Gold'",
+            "No logistics subsidiary mentioned",
+          ],
+          opportunity:
+            "Dania Trading can beat Alikhwa by focusing on <strong>auto parts (Rack Gold brand)</strong> — a segment Alikhwa doesn't cover. Also, Dania's <strong>Djibouti Free Zone advantage</strong> and sister logistics company give operational edge for Ethiopia corridor trade.",
+        },
+        {
+          name: "AFC General Trading",
+          website: "https://afc-africa.com",
+          location: "Djibouti (10th Anniversary 2024)",
+          founded: "2014",
+          staff: "Professional team",
+          threat: "HIGH",
+          overview:
+            "DIRECT same-market competitor in Djibouti. Specializes in food commodities — Sugar, Rice, Cooking Oil. Reported $41.8 Million revenue in 2023 with 61% growth. Very data-driven and transparent company.",
+          products: [
+            "Sugar (from Brazil & India)",
+            "Rice (from Brazil & India)",
+            "Cooking Oil (short lead times)",
+            "Distribution to Ethiopia & Somalia wholesalers",
+          ],
+          pros: [
+            "Revenue transparency: $41.8M in 2023 — very credible",
+            "Direct factory sourcing (Brazil, India) = competitive pricing",
+            "Cash-on-delivery model builds buyer trust",
+            "Strong digital presence with detailed website",
+            "61% revenue growth = fast expanding competitor",
+            "Focused strategy: 3 core products done perfectly",
+          ],
+          cons: [
+            "Only 3 products — very limited range vs Dania",
+            "No auto parts, no construction, no logistics",
+            "Newer company (10 years) vs Dania's 15+ years",
+            "No own brand",
+            "No warehousing mentioned",
+          ],
+          opportunity:
+            "Dania's <strong>wider product portfolio</strong> is a major advantage — AFC only does 3 products. Dania should highlight being a <strong>'one-stop-shop'</strong> vs AFC's narrow focus. Dania should also publish revenue/client numbers to build similar credibility.",
+        },
+        {
+          name: "MAM General Trading FZE",
+          website: "https://mamgeneral.com",
+          location: "Djibouti HQ + Addis Ababa Branch",
+          founded: "2021",
+          staff: "60+ professionals",
+          threat: "HIGH",
+          overview:
+            "Fast-growing competitor established in Djibouti in 2021. Despite being younger, has 60+ staff and land lease at Djibouti dry port. Focuses on vehicles, agro-commodities, and logistics. Has branch in Addis Ababa showing Ethiopia commitment.",
+          products: [
+            "Vehicle Import (Asia & Europe)",
+            "Agro Commodities (Coffee, Oilseeds, Pulses)",
+            "International Transport & Logistics",
+            "Djibouti Free Zone Services",
+            "Export: Ethiopian Coffee worldwide",
+          ],
+          pros: [
+            "60+ professional staff — larger than Dania stated team",
+            "Land lease at Djibouti dry port — strategic asset",
+            "Branch in Addis Ababa for Ethiopia market",
+            "Professional website with testimonials",
+            "No hidden fees policy — strong trust signal",
+            "Dual role: both import AND export (coffee)",
+          ],
+          cons: [
+            "Only 3 years old — less market experience",
+            "No food commodities (rice, flour, oil) — key gap",
+            "No construction materials",
+            "No own brand",
+            "Vehicle focus different from Dania's auto parts",
+          ],
+          opportunity:
+            "MAM doesn't do food commodities at all. Dania should aggressively <strong>target food buyers</strong> that MAM cannot serve. Also, Dania's <strong>15+ years experience</strong> vs MAM's 3 years is a strong trust advantage to highlight.",
+        },
+        {
+          name: "OSMA Trading",
+          website: "https://osmatrading.com",
+          location: "Djibouti, Ethiopia & Somalia",
+          founded: "2017",
+          staff: "Growing team",
+          threat: "MEDIUM",
+          overview:
+            "Similar multi-category trader covering food, construction, spare parts, and chemicals. Operates in same 3 markets as Dania. Growing company positioned as 'emerging leader.' Most similar in structure to Dania Trading.",
+          products: [
+            "Food Items (wholesale & semi-wholesale)",
+            "Construction Materials",
+            "Chemical Items",
+            "Spare Parts",
+          ],
+          pros: [
+            "Same 3-market coverage as Dania",
+            "Chemicals category — unique differentiation",
+            "Specialty product customization for clients",
+            "Growing brand in region",
+          ],
+          cons: [
+            "Newer (7 years) vs Dania's 15+",
+            "No own brand",
+            "No logistics subsidiary",
+            "Less established reputation",
+            "No auto parts brand like Rack Gold",
+          ],
+          opportunity:
+            "Most structurally similar to Dania — compete by highlighting <strong>15+ years track record</strong>, the <strong>Rack Gold brand</strong>, and the <strong>Global Transit sister company</strong> as assets OSMA doesn't have.",
+        },
+        {
+          name: "IJA General Trading FZE",
+          website: "https://ijatrading.com",
+          location: "Djibouti (FZE)",
+          founded: "Active",
+          staff: "Professional team",
+          threat: "MEDIUM",
+          overview:
+            "Djibouti-based FZE competitor. Specializes in coffee export, rice, foodstuff, soap/detergents, and construction materials. Has client testimonials. Offers flexible payment options which attracts buyers.",
+          products: [
+            "Coffee (Raw, Roasted, Arabica)",
+            "Rice & Foodstuff (bulk)",
+            "Soap & Detergents",
+            "Construction & Building Materials",
+          ],
+          pros: [
+            "Unique: coffee export niche — Dania doesn't do this",
+            "Client testimonials shown on website",
+            "Flexible payment options mentioned",
+            "International quality standards claimed",
+            "Bulk rice supply at competitive prices",
+          ],
+          cons: [
+            "No auto parts",
+            "No logistics subsidiary",
+            "No own brand",
+            "Smaller operation than Dania",
+          ],
+          opportunity:
+            "IJA's coffee niche doesn't overlap with Dania. Compete on <strong>product breadth</strong> and <strong>Rack Gold auto parts brand</strong>. Dania should add client testimonials to website like IJA has done.",
+        },
+        {
+          name: "Towfiq Group",
+          website: "https://www.towfiiqgroup.com",
+          location: "Bosaso, Somalia (+ Djibouti, Hargeisa, UAE, China)",
+          founded: "1992",
+          staff: "Large group",
+          threat: "MEDIUM",
+          overview:
+            "Oldest competitor — established 1992, before Dania. Large Somalia-focused conglomerate with Djibouti presence. Distributes foodstuff, building materials, furniture, electronics. Has sole distributor agreements and co-invested in Salalah Macaroni Company.",
+          products: [
+            "Foodstuff & Dairy",
+            "Building Materials",
+            "Furniture & Electronics",
+            "Engine Oil",
+            "Bakery / Macaroni (own factory investment)",
+            "LPG & Fuel",
+          ],
+          pros: [
+            "33 years established — oldest in the region",
+            "Offices in 6+ locations (Djibouti, Somalia, UAE, China)",
+            "Sole distributor agreements — exclusive products",
+            "Co-invested in pasta factory (manufacturing)",
+            "Somali language website — local market advantage",
+            "LPG & Fuel vertical — no one else does this",
+          ],
+          cons: [
+            "Somalia-focused — less dominant in Djibouti",
+            "No auto parts",
+            "Scattered focus across too many categories",
+            "Less Djibouti FZE presence vs Dania",
+          ],
+          opportunity:
+            "Towfiq is huge in Somalia but <strong>Dania is stronger in Djibouti Free Zone and Ethiopia corridor</strong>. Focus on Djibouti-Ethiopia trade route where Dania's sister logistics company is an advantage Towfiq doesn't match locally.",
+        },
+      ];
+
+      const AI_CONTEXT = `
+You are an expert business strategy consultant analyzing Dania General Trading FZE against its competitors in East Africa.
+
+DANIA GENERAL TRADING FZE (CLIENT COMPANY):
+- Location: Djibouti Free Zone, Salam Tower
+- Experience: 15+ years
+- Markets: Djibouti, Somaliland, Ethiopia/East Africa  
+- Products: Sunflower Oil, Rice, Wheat Flour, Palm Oil, Lentils, Tomato Paste, Ketchup, Milk Powder, Juices, Spices, Nuts, Dry Fruits, Yeast, Sugar, Dates, White Rice, Parboiled Rice, Vegetable Oil
+- Auto Parts: Tyres, Batteries — Own brand "Rack Gold" (well known in Djibouti & Ethiopia)
+- Construction: Cement, Galvanized Sheet, Steel Rebar
+- Logistics: Sister company "Global Transit & Transport Services" — largest warehousing in Djibouti, 20+ staff, Djibouti port clearing, Ethiopia transport
+- Core Values: Trust, Customer Support, Convergence
+- Website: daniatrading.com (WordPress, basic content, no testimonials, counters show 0+)
+
+COMPETITORS FOUND AND ANALYZED:
+
+1. ALIKHWA GROUP (alikhwagroups.com) - HIGH THREAT
+- Founded 1993, Hargeisa Somaliland, 5 countries (DJ, ETH, KEN, SOM)
+- Products: Rice/Sugar/Flour/Oil, Steel products, Infrastructure projects
+- Strengths: 30+ years, NGO contracts, multi-port, no auto parts
+
+2. AFC GENERAL TRADING (afc-africa.com) - HIGH THREAT  
+- Founded 2014, Djibouti, $41.8M revenue 2023 (61% growth)
+- Products: ONLY Sugar, Rice, Cooking Oil
+- Strengths: Revenue transparency, factory direct, cash-on-delivery
+- Weakness: Only 3 products, no construction/auto
+
+3. MAM GENERAL TRADING FZE (mamgeneral.com) - HIGH THREAT
+- Founded 2021, Djibouti + Addis Ababa branch, 60+ staff
+- Products: Vehicles, Agro commodities, Logistics, Coffee export
+- Strengths: Dry port land lease, Addis branch, testimonials
+- Weakness: No food commodities, no construction
+
+4. OSMA TRADING (osmatrading.com) - MEDIUM THREAT
+- Founded 2017, Djibouti + Ethiopia + Somalia
+- Products: Food, Construction, Spare Parts, Chemicals
+- Most structurally similar to Dania
+
+5. IJA GENERAL TRADING FZE (ijatrading.com) - MEDIUM THREAT
+- Djibouti FZE, Products: Coffee, Rice, Foodstuff, Soap, Construction
+- Strengths: Testimonials, flexible payment, coffee niche
+
+6. TOWFIQ GROUP (towfiiqgroup.com) - MEDIUM THREAT
+- Founded 1992, Bosaso Somalia, 6+ offices worldwide
+- Products: Food, Building materials, Electronics, Engine oil, LPG, Bakery
+- Strengths: Oldest, sole distributor agreements, Somali language
+
+INSTRUCTIONS:
+- Respond in same language user asks (Urdu or English)
+- Be specific, reference actual competitor names and data
+- Give actionable strategic advice
+- Be honest about Dania's weaknesses
+- Format responses clearly with emojis for readability
+- Keep responses focused (250-400 words max)
+`;
+
+      let conversationHistory = [];
+      let isLoading = false;
+      let currentView = "competitors";
+
+      // RENDER COMPETITOR DETAIL
+      function renderCompetitor(idx) {
+        const c = COMPETITORS[idx];
+        const threatClass =
+          c.threat === "HIGH"
+            ? "threat-high"
+            : c.threat === "MEDIUM"
+              ? "threat-med"
+              : "threat-low";
+        const threatLabel =
+          c.threat === "HIGH"
+            ? "🔴 High Threat"
+            : c.threat === "MEDIUM"
+              ? "🟡 Medium Threat"
+              : "🟢 Low Threat";
+
+        document.getElementById("detailArea").innerHTML = `
+    <div class="detail-hero">
+      <div class="detail-hero-top">
+        <div>
+          <div class="detail-name">${c.name}</div>
+          <div class="detail-sub">📍 ${c.location} &nbsp;|&nbsp; Est. ${c.founded} &nbsp;|&nbsp; <span class="threat-badge ${threatClass}">${threatLabel}</span></div>
+        </div>
+        <a href="${c.website}" target="_blank" class="visit-btn">
+          🌐 Website Visit
+        </a>
+      </div>
+      <p style="font-size:13px; line-height:1.7; color:var(--text)">${c.overview}</p>
+    </div>
+
+    <div class="detail-grid">
+      <div class="detail-stat">
+        <div class="detail-stat-label">Threat Level</div>
+        <div class="detail-stat-val ${c.threat === "HIGH" ? "red" : "gold"}">${c.threat}</div>
+      </div>
+      <div class="detail-stat">
+        <div class="detail-stat-label">Founded</div>
+        <div class="detail-stat-val">${c.founded}</div>
+      </div>
+      <div class="detail-stat">
+        <div class="detail-stat-label">Team Size</div>
+        <div class="detail-stat-val gold">${c.staff}</div>
+      </div>
+    </div>
+
+    <div class="section-title">Products & Services</div>
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin-bottom:20px;">
+      <ul style="padding-left:18px;">
+        ${c.products.map((p) => `<li style="font-size:13px;margin-bottom:5px;color:var(--text)">${p}</li>`).join("")}
+      </ul>
+    </div>
+
+    <div class="section-title">Strengths vs Weaknesses</div>
+    <div class="pros-cons">
+      <div class="pros">
+        <div class="pros-title">✅ Their Strengths</div>
+        <ul>${c.pros.map((p) => `<li>${p}</li>`).join("")}</ul>
+      </div>
+      <div class="cons">
+        <div class="cons-title">❌ Their Weaknesses</div>
+        <ul>${c.cons.map((p) => `<li>${p}</li>`).join("")}</ul>
+      </div>
+    </div>
+
+    <div class="section-title">Dania's Opportunity</div>
+    <div class="opp-box">
+      <p>💡 ${c.opportunity}</p>
+    </div>
+
+    <div style="text-align:center;margin-bottom:20px">
+      <button class="quick-btn" onclick="askAboutCompetitor('${c.name}')" style="padding:10px 20px;font-size:13px;border-radius:10px;">
+        💬 "${c.name}" ke baare mein AI se poochein →
+      </button>
+    </div>
+  `;
+      }
+
+      function showCompetitor(idx, el) {
+        document
+          .querySelectorAll(".comp-card")
+          .forEach((c) => c.classList.remove("active"));
+        el.classList.add("active");
+        renderCompetitor(idx);
+      }
+
+      function askAboutCompetitor(name) {
+        switchTab("chat");
+        setTimeout(() => {
+          document.getElementById("userInput").value =
+            `${name} ke against Dania Trading ki kya strategy honi chahiye?`;
+          sendMessage();
+        }, 200);
+      }
+
+      // TAB SWITCHING
+      function switchTab(tab) {
+        currentView = tab;
+        document
+          .querySelectorAll(".tab-btn")
+          .forEach((b) => b.classList.remove("active"));
+        document
+          .querySelectorAll(".view")
+          .forEach((v) => v.classList.remove("active"));
+
+        const tabBtns = document.querySelectorAll(".tab-btn");
+        const tabMap = { competitors: 0, compare: 1, chat: 2 };
+        tabBtns[tabMap[tab]].classList.add("active");
+        document.getElementById(`view-${tab}`).classList.add("active");
+      }
+
+      // CHAT
+      function autoResize(el) {
+        el.style.height = "auto";
+        el.style.height = Math.min(el.scrollHeight, 100) + "px";
+      }
+
+      function handleKey(e) {
+        if (e.key === "Enter" && !e.shiftKey) {
+          e.preventDefault();
+          sendMessage();
+        }
+      }
+
+      function askQ(text) {
+        document.getElementById("userInput").value = text;
+        sendMessage();
+      }
+
+      function scrollBottom() {
+        const a = document.getElementById("chatArea");
+        a.scrollTop = a.scrollHeight;
+      }
+
+      function addMsg(role, html) {
+        const area = document.getElementById("chatArea");
+        const div = document.createElement("div");
+        div.className = `message ${role}`;
+        const av = document.createElement("div");
+        av.className = `avatar ${role}`;
+        av.textContent = role === "ai" ? "D" : "U";
+        const bub = document.createElement("div");
+        bub.className = "bubble";
+        bub.innerHTML = html;
+        div.appendChild(av);
+        div.appendChild(bub);
+        area.appendChild(div);
+        scrollBottom();
+      }
+
+      function showTyping() {
+        const area = document.getElementById("chatArea");
+        const div = document.createElement("div");
+        div.className = "message ai";
+        div.id = "typing";
+        const av = document.createElement("div");
+        av.className = "avatar ai";
+        av.textContent = "D";
+        const t = document.createElement("div");
+        t.className = "typing";
+        t.innerHTML = "<span></span><span></span><span></span>";
+        div.appendChild(av);
+        div.appendChild(t);
+        area.appendChild(div);
+        scrollBottom();
+      }
+
+      function removeTyping() {
+        const t = document.getElementById("typing");
+        if (t) t.remove();
+      }
+
+      function fmt(text) {
+        text = text.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
+        text = text.replace(
+          /^### (.*)/gm,
+          '<br><strong style="color:var(--gold);font-size:12px;text-transform:uppercase;letter-spacing:0.5px">$1</strong><br>',
+        );
+        text = text.replace(/^- (.*)/gm, "• $1<br>");
+        text = text.replace(/\n\n/g, "<br><br>");
+        text = text.replace(/\n/g, "<br>");
+        return text;
+      }
+
+      async function sendMessage() {
+        const input = document.getElementById("userInput");
+        const sendBtn = document.getElementById("sendBtn");
+        const text = input.value.trim();
+        if (!text || isLoading) return;
+        isLoading = true;
+        sendBtn.disabled = true;
+        input.value = "";
+        input.style.height = "auto";
+
+        if (currentView !== "chat") switchTab("chat");
+
+        addMsg("user", text);
+        conversationHistory.push({ role: "user", content: text });
+        showTyping();
+
+        try {
+          const res = await fetch("https://api.anthropic.com/v1/messages", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              model: "claude-sonnet-4-20250514",
+              max_tokens: 1000,
+              system: AI_CONTEXT,
+              messages: conversationHistory,
+            }),
+          });
+          const data = await res.json();
+          removeTyping();
+          const reply =
+            data.content?.map((b) => b.text || "").join("") ||
+            "Error. Dobara try karein.";
+          conversationHistory.push({ role: "assistant", content: reply });
+          addMsg("ai", fmt(reply));
+        } catch (e) {
+          removeTyping();
+          addMsg("ai", "⚠️ Network error. Please try again.");
+        }
+
+        isLoading = false;
+        sendBtn.disabled = false;
+      }
+
+      // Initialize
+      renderCompetitor(0);
+    </script>
+  </body>
+</html>
