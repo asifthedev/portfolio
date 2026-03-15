@@ -1,36 +1,60 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# StoreStride Portfolio
 
-## Getting Started
+This is a Next.js portfolio project for StoreStride, showcasing Amazon advertising services, case studies, and a multi-step contact form.
 
-First, run the development server:
+## Project Structure
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- `app/page.tsx`: Main homepage composition, imports all sections.
+- `app/components/`: Contains all React components for sections, forms, and UI elements.
+- `app/components/FinalStepSection.tsx`: Final call-to-action section with gradient button and glowing background.
+- `public/`: Static assets (images, SVGs, etc.).
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Key Features
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- **Hero Section**: Data-driven Amazon advertising, animated gradient CTA button.
+- **About, Projects, Case Studies, ResultsHero, ApproachSection**: Informational and showcase sections.
+- **PPCServicesSection**: Bento grid for PPC services.
+- **Contact**: Multi-step form for audit requests.
+- **FinalStepSection**: End-of-page CTA with glowing background and Trustpilot stars.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Styling
 
-## Learn More
+- Tailwind CSS for rapid styling and layout.
+- Gradient backgrounds and glowing effects for visual emphasis.
+- Consistent button styles across sections.
 
-To learn more about Next.js, take a look at the following resources:
+## How to Run
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. Install dependencies:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+   ```bash
+   npm install
+   ```
 
-## Deploy on Vercel
+2. Start the development server:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+   ```bash
+   npm run dev
+   ```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+3. Visit [http://localhost:3000](http://localhost:3000) to view the site.
+
+## Customization
+
+- Edit section components in `app/components/` to update content or styling.
+- Add new images/SVGs to `public/` for use in UI.
+- Update form fields in `Contact.tsx` for custom audit requirements.
+
+## Comments & Code Quality
+
+- Components are commented for clarity.
+- Variable and function names are human-readable and descriptive.
+- Unused code is removed for maintainability.
+
+## Deployment
+
+- Deploy easily on Vercel or any Next.js-compatible platform.
+
+## License
+
+MIT

@@ -6,17 +6,39 @@ import { Menu, X } from "lucide-react";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
 
-export default function Navbar() {
-  const [open, setOpen] = useState(false);
-  const pathname = usePathname();
+// Navigation link configuration
+type NavigationLink = {
+  name: string;
+  href: string;
+};
 
-  const navLinks = [
+/**
+ * Navbar - Main navigation component with sticky positioning
+ *
+ * Features:
+ * - Sticky header with backdrop blur effect
+ * - Responsive mobile menu with slide-in animation
+ * - Active link highlighting
+ * - Gradient CTA button with animated arrow
+ */
+export default function Navbar() {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const currentPathname = usePathname();
+
+  const navigationLinks: NavigationLink[] = [
     { name: "Home", href: "/" },
     { name: "Our Process", href: "/process" },
     { name: "About", href: "/about" },
     { name: "Case Studies", href: "/#case-studies" },
     { name: "Contact", href: "/contact" },
   ];
+
+  /**
+   * Determines if the given link is the current active page
+   */
+  const isActiveLink = (href: string): boolean => {
+    return currentPathname === href;
+  };
 
   return (
     <nav className="sticky top-0 w-full z-50 backdrop-blur-xl bg-black/60 border-b border-white/10">
@@ -26,17 +48,19 @@ export default function Navbar() {
           <span className="text-[#2391C4]">Store</span>Stride
         </div>
 
-        {/* Desktop Menu */}
+        {/* Desktop Navigation Menu */}
         <div className="hidden md:flex items-center gap-4 text-gray-300">
-          {navLinks.map((link, index) => {
-            const isActive = pathname === link.href;
+          {navigationLinks.map((link, linkIndex) => {
+            const isCurrentlyActive = isActiveLink(link.href);
 
             return (
               <Link
-                key={index}
+                key={linkIndex}
                 href={link.href}
                 className={`group relative px-4 py-2 transition duration-300 after:content-[''] after:absolute after:left-4 after:right-4 after:bottom-0 after:h-[2px] after:origin-left after:scale-x-0 after:bg-[#2391C4] after:transition-transform after:duration-300 hover:after:scale-x-100 ${
-                  isActive ? "text-[#2391C4]" : "text-gray-300 hover:text-white"
+                  isCurrentlyActive
+                    ? "text-[#2391C4]"
+                    : "text-gray-300 hover:text-white"
                 }`}
               >
                 {link.name}
@@ -45,7 +69,7 @@ export default function Navbar() {
           })}
         </div>
 
-        {/* Right Section */}
+        {/* CTA Button (Desktop Only) */}
         <div className="hidden md:flex items-center">
           <Link
             href="/contact"
@@ -53,6 +77,7 @@ export default function Navbar() {
           >
             <span>Contact Us</span>
             <span className="relative h-4 w-4">
+              {/* Animated arrow that switches on hover */}
               <Image
                 src="/arrow-black.svg"
                 alt="Arrow"
@@ -69,30 +94,31 @@ export default function Navbar() {
           </Link>
         </div>
 
-        {/* Mobile Button */}
+        {/* Mobile Menu Toggle Button */}
         <button
           type="button"
           className="md:hidden text-white rounded-full"
-          onClick={() => setOpen(!open)}
-          aria-label="Toggle menu"
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          aria-label="Toggle mobile menu"
+          aria-expanded={isMobileMenuOpen}
         >
-          {open ? <X size={26} /> : <Menu size={26} />}
+          {isMobileMenuOpen ? <X size={26} /> : <Menu size={26} />}
         </button>
       </div>
 
-      {/* Mobile Menu */}
-      {open && (
+      {/* Mobile Navigation Menu */}
+      {isMobileMenuOpen && (
         <div className="md:hidden bg-black border-t border-white/10 px-6 py-6 flex flex-col gap-6 text-gray-300 animate-fadeIn">
-          {navLinks.map((link, index) => {
-            const isActive = pathname === link.href;
+          {navigationLinks.map((link, linkIndex) => {
+            const isCurrentlyActive = isActiveLink(link.href);
 
             return (
               <Link
-                key={index}
+                key={linkIndex}
                 href={link.href}
-                onClick={() => setOpen(false)}
+                onClick={() => setIsMobileMenuOpen(false)}
                 className={`transition ${
-                  isActive
+                  isCurrentlyActive
                     ? "text-[#2391C4]"
                     : "text-gray-300 hover:text-[#2391C4]"
                 }`}

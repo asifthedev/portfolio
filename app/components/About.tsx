@@ -2,6 +2,28 @@
 
 import { useScrollReveal } from "../hooks/useScrollReveal";
 
+// Statistics card data structure
+type StatisticCard = {
+  number: string;
+  label: string;
+};
+
+// Professional statistics to display
+const professionalStats: StatisticCard[] = [
+  { number: "3+", label: "Years Experience" },
+  { number: "20+", label: "Projects Completed" },
+  { number: "15+", label: "Happy Clients" },
+  { number: "100%", label: "Client Satisfaction" },
+];
+
+/**
+ * About - About section with professional bio and statistics
+ *
+ * Features a two-column layout:
+ * - Left: Professional bio and description
+ * - Right: Grid of achievement statistics
+ * Includes scroll-reveal animations
+ */
 export default function About() {
   const ref = useScrollReveal();
 
@@ -11,11 +33,11 @@ export default function About() {
       ref={ref as React.RefObject<HTMLElement>}
       className="relative py-24 px-6 bg-black text-white overflow-hidden"
     >
-      {/* Blue Background Glow */}
+      {/* Background Glow Effect */}
       <div className="absolute w-[700px] h-[700px] bg-[#2391C4]/15 rounded-full blur-[160px] left-1/2 -translate-x-1/2 top-0" />
 
       <div className="relative z-10 max-w-6xl mx-auto grid md:grid-cols-2 gap-16 items-center">
-        {/* Left Side */}
+        {/* Left Side - Professional Bio */}
         <div>
           <h2
             data-animate="fade-left"
@@ -45,25 +67,20 @@ export default function About() {
           </p>
         </div>
 
-        {/* Right Side - Premium Stats Cards */}
+        {/* Right Side - Achievement Statistics Grid */}
         <div className="grid grid-cols-2 gap-6">
-          {[
-            { number: "3+", label: "Years Experience" },
-            { number: "20+", label: "Projects Completed" },
-            { number: "15+", label: "Happy Clients" },
-            { number: "100%", label: "Client Satisfaction" },
-          ].map((item, index) => (
+          {professionalStats.map((statItem, statIndex) => (
             <div
-              key={index}
+              key={statIndex}
               data-animate="scale-in"
-              data-delay={index + 1}
+              data-delay={statIndex + 1}
               className="p-8 bg-white/5 backdrop-blur-xl border border-[#2391C4]/20 rounded-2xl text-center transition duration-300 hover:border-[#2391C4]/50 hover:shadow-[0_0_30px_rgba(35,145,196,0.3)]"
             >
               <h3 className="text-3xl font-bold text-[#2391C4]">
-                {item.number}
+                {statItem.number}
               </h3>
               <p className="text-gray-400 mt-3 text-sm tracking-wide">
-                {item.label}
+                {statItem.label}
               </p>
             </div>
           ))}

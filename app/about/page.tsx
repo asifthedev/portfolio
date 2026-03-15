@@ -1,11 +1,14 @@
 import TestimonialsMasonry from "../components/TestimonialsMasonry";
-import Contact from "../components/Contact";
 
+/**
+ * About Page - Dedicated page for client testimonials
+ *
+ * Displays a masonry grid layout of client testimonials and reviews.
+ */
 export default function About() {
   return (
     <>
       <TestimonialsMasonry />
-      <Contact />
     </>
   );
 }
